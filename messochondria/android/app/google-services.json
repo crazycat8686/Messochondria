@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "296182257483",
+    "project_id": "messochondria",
+    "storage_bucket": "messochondria.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296182257483:android:fc585fab92562edb6b3ace",
+        "android_client_info": {
+          "package_name": "com.example.messochondria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZYALwLvH9Or0k9gy1_ccpshCNbMXQXvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
