@@ -21,22 +21,33 @@ class _setupState extends State<setup> {
 
   var dt = "Current menu :";
   var dayst = "Good Morning !";
-  var temp = 24;
+  var dayc = "day";
+  String lt = 'ass/sun.json';
+  dynamic temp;
   Future<void> weath() async {
+    print("weather data fetcher");
     try {
       final res = await Dio().get(
         'https://api.open-meteo.com/v1/forecast?latitude=16.514&longitude=80.516&daily=temperature_2m_mean&hourly=,cloud_cover_high,cloud_cover_mid,cloud_cover_low,cloud_cover,is_day&current=temperature_2m,rain,showers,is_day,apparent_temperature',
       );
       print(res.data);
+      print("res fetcher");
       setState(() {
         temp = res.data['current']['temperature_2m'];
+        print(temp);
       });
+      if (dayc == "day") {
+        setState(() {
+          lt = 'ass/csun.json';
+        });
+      }
     } catch (e) {
       print(e);
     }
   }
 
   Future<void> checktd() async {
+    print(DateTime.now().hour);
     final FirebaseFirestore fire = FirebaseFirestore.instance;
     final res = await fire
         .collection("decmhvegandnveg")
@@ -44,7 +55,7 @@ class _setupState extends State<setup> {
         .get();
 
     print(DateTime.now().day.toString());
-    if (DateTime.now().hour > 0 && DateTime.now().hour < 9) {
+    if (DateTime.now().hour > 0 && DateTime.now().hour <= 9) {
       print("bf");
       setState(() {
         dt = res['bf'];
@@ -52,7 +63,7 @@ class _setupState extends State<setup> {
         dayst = "Good Morning !";
       });
     }
-    if (DateTime.now().hour >= 9 && DateTime.now().hour <= 14) {
+    if (DateTime.now().hour > 9 && DateTime.now().hour <= 14) {
       print("lunch");
       setState(() {
         dt = res['lun'];
@@ -105,6 +116,8 @@ class _setupState extends State<setup> {
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
+                            backgroundBlendMode: BlendMode.screen,
+
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -119,12 +132,22 @@ class _setupState extends State<setup> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Align(
+                                  alignment: AlignmentGeometry.centerRight,
+                                  // widthFactor: 20,
+                                  // heightFactor: 0,
+                                  child: LottieBuilder.asset(
+                                    lt,
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                ),
                                 Text(
                                   dayst,
                                   style: TextStyle(
                                     fontFamily: 'Lexend',
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 43,
+                                    fontSize: 41,
                                   ),
                                 ),
                                 Padding(
@@ -160,14 +183,18 @@ class _setupState extends State<setup> {
                                       ),
                                       Align(
                                         alignment: AlignmentGeometry.centerLeft,
-                                        child: Text(
-                                          "$temp",
-                                          style: TextStyle(
-                                            fontFamily: 'Lexend',
-                                            fontSize: 34,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
+                                        child: temp == null
+                                            ? CircularProgressIndicator(
+                                                color: Colors.grey,
+                                              )
+                                            : Text(
+                                                temp.toString(),
+                                                style: TextStyle(
+                                                  fontFamily: 'Lexend',
+                                                  fontSize: 34,
+                                                  fontWeight: FontWeight.w900,
+                                                ),
+                                              ),
                                       ),
                                     ],
                                   ),
@@ -176,7 +203,6 @@ class _setupState extends State<setup> {
                             ),
                           ),
                         ),
-                        Lottie.asset('ass/met.json'),
                       ],
                     ),
 
@@ -185,14 +211,12 @@ class _setupState extends State<setup> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            child: Text(
-                              dt,
-                              style: TextStyle(
-                                fontFamily: 'Lexend',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 23,
-                              ),
+                          child: Text(
+                            dt,
+                            style: TextStyle(
+                              fontFamily: 'Lexend',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 23,
                             ),
                           ),
                         ),
